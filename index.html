@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	 <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="img1.jpg">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-     <link rel="apple-touch-icon" href="img1.jpg">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Calendario Minimal</title>
     <style>
         * {
@@ -97,6 +96,10 @@
             opacity: 0.8;
         }
 
+        .weekday:last-child {
+            color: #ff6b6b;
+        }
+
         .day {
             aspect-ratio: 1;
             display: flex;
@@ -106,6 +109,10 @@
             color: #87CEEB;
             border-radius: 50%;
             transition: all 0.2s ease;
+        }
+
+        .day:nth-child(7n) {
+            color: #ff6b6b;
         }
 
         .day:hover:not(.other-month) {
@@ -180,7 +187,7 @@
                 this.currentYear = this.date.getFullYear();
                 this.monthNames = ['Gennaio', 'Febbraio', 'Marzo', 'Aprile', 'Maggio', 'Giugno', 
                                  'Luglio', 'Agosto', 'Settembre', 'Ottobre', 'Novembre', 'Dicembre'];
-                this.weekDays = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+                this.weekDays = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'];
                 
                 this.initializeSelects();
                 this.setupEventListeners();
@@ -237,6 +244,11 @@
                 this.renderCalendar();
             }
 
+            getDayOfWeek(date) {
+                let day = date.getDay();
+                return day === 0 ? 6 : day - 1; // Convert Sunday from 0 to 6
+            }
+
             renderCalendar() {
                 const calendar = document.getElementById('calendar');
                 calendar.innerHTML = '';
@@ -252,7 +264,9 @@
                 const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
                 const prevMonthLastDay = new Date(this.currentYear, this.currentMonth, 0);
                 
-                for (let i = firstDay.getDay() - 1; i >= 0; i--) {
+                const firstDayOfWeek = this.getDayOfWeek(firstDay);
+                
+                for (let i = firstDayOfWeek - 1; i >= 0; i--) {
                     const dayElement = document.createElement('div');
                     dayElement.className = 'day other-month';
                     dayElement.textContent = prevMonthLastDay.getDate() - i;
